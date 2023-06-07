@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "716745227241",
+    "project_id": "metrovote-c80a5",
+    "storage_bucket": "metrovote-c80a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716745227241:android:abd703ec4e7d13a0c2a978",
+        "android_client_info": {
+          "package_name": "com.inhatc.metrovote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716745227241-rrnuhp5br7hrpva8tltuh168ckquucg0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv7vDEpi_1IlqLp92Wr-wa1TsRZ-N5Gk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716745227241-rrnuhp5br7hrpva8tltuh168ckquucg0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
