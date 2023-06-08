@@ -7,38 +7,6 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/edtID"
-        android:layout_width="360dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="42dp"
-        android:layout_marginEnd="42dp"
-        android:layout_marginBottom="33dp"
-        android:ems="10"
-        android:hint="아이디"
-        android:inputType="textPersonName"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLogin" />
-
-    <EditText
-        android:id="@+id/editTextTextPassword"
-        android:layout_width="360dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="353dp"
-        android:ems="10"
-        android:hint="패스워드"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtID" />
-
     <TextView
         android:id="@+id/textLogin"
         android:layout_width="130dp"
@@ -46,40 +14,24 @@
         android:layout_marginStart="141dp"
         android:layout_marginTop="87dp"
         android:layout_marginEnd="141dp"
-        android:layout_marginBottom="30dp"
         android:gravity="center|center_vertical"
         android:text="METROVOTE"
         android:textColor="#2196F3"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/edtID"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="162dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="162dp"
-        android:text="로그인"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/btn_google_sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.562" />
+        app:layout_constraintVertical_bias="0.247" />
 
     <Button
         android:id="@+id/btn_logout_google"
@@ -87,10 +39,66 @@
         android:layout_height="wrap_content"
         android:text="구글 로그아웃"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.862" />
+        app:layout_constraintVertical_bias="0.976" />
+
+    <Button
+        android:id="@+id/btnResCaptcha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="32dp"
+        android:text="캡차 재 생성"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_google_sign_in" />
+
+    <ImageView
+        android:id="@+id/captchaImage"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintEnd_toEndOf="@+id/btn_google_sign_in"
+        app:layout_constraintTop_toBottomOf="@+id/btn_google_sign_in"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/captchaExplainTxtView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="47dp"
+        android:layout_marginBottom="245dp"
+        android:text="캡차를 입력해서 구글 로그인을 활성화 시켜 주세요."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/captchaImage"
+        app:layout_constraintVertical_bias="0.94" />
+
+    <EditText
+        android:id="@+id/edtTextCaptcha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:ems="10"
+        android:hint="캡차를 입력해주세요"
+        android:inputType="text"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btnInsertCaptcha"
+        app:layout_constraintEnd_toStartOf="@+id/btnInsertCaptcha"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnInsertCaptcha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:text="확인"
+        app:layout_constraintBottom_toTopOf="@+id/captchaExplainTxtView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/edtTextCaptcha" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

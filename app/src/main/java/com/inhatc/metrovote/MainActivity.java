@@ -1,14 +1,19 @@
 package com.inhatc.metrovote;
 
-import static android.content.ContentValues.TAG;
-
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -19,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.android.recaptcha.RecaptchaTasksClient;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +33,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 9001;
+
+    @Nullable
+    private RecaptchaTasksClient recaptchaTasksClient = null;
 
     // 구글api클라이언트
     private GoogleSignInClient mGoogleSignInClient;
@@ -41,10 +50,61 @@ public class MainActivity extends AppCompatActivity {
     private SignInButton btnGoogleLogin;
     private Button btnLogoutGoogle;
 
+    private Button btnResCaptcha;
+    private Button btnInsCaptcha;
+    private String captchaText;
+    private ImageView captchaImage;
+    String imagePath;
+    private Bitmap bitmap;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        captchaText = CAPTCHA.createCaptchaValue();
+        captchaImage = findViewById(R.id.captchaImage);
+        btnResCaptcha = (Button) findViewById(R.id.btnResCaptcha);
+        btnInsCaptcha = (Button) findViewById(R.id.btnInsertCaptcha);
+
+        Drawable drawable = TextToImg.generateImage(captchaText, MainActivity.this,300,150);
+        if (drawable != null) {
+            captchaImage.setImageDrawable(drawable);
+        }
+        
+        btnResCaptcha.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                captchaText = CAPTCHA.createCaptchaValue();
+                Drawable drawable = TextToImg.generateImage(captchaText, MainActivity.this,300,150);
+                if (drawable != null) {
+                    captchaImage.setImageDrawable(drawable);
+                }
+            }
+        });
+
+        btnInsCaptcha.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String insertCaptcha = ((EditText)findViewById(R.id.edtTextCaptcha)).getText().toString();
+
+                if(captchaText.equals(insertCaptcha)) {
+                    Toast.makeText(MainActivity.this, "캡차가 일치합니다!", Toast.LENGTH_SHORT).show();
+                    btnGoogleLogin.setEnabled(true);
+                    btnInsCaptcha.setEnabled(false);
+                    btnResCaptcha.setEnabled(false);
+                } else {
+                    Toast.makeText(MainActivity.this, "캡차가 일치하지 않습니다.!", Toast.LENGTH_SHORT).show();
+                    captchaText = CAPTCHA.createCaptchaValue();
+                    Drawable drawable = TextToImg.generateImage(captchaText, MainActivity.this,300,150);
+                    if (drawable != null) {
+                        captchaImage.setImageDrawable(drawable);
+                    }
+                }
+
+            }
+        });
 
         // 파이어베이스 인증 객체 선언
         mAuth = FirebaseAuth.getInstance();
@@ -59,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
         btnGoogleLogin = findViewById(R.id.btn_google_sign_in);
+        btnGoogleLogin.setEnabled(false);
+
         btnGoogleLogin.setOnClickListener(view -> {
             // 기존에 로그인 했던 계정을 확인한다.
             gsa = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
@@ -76,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
             signOut(); //로그아웃
         });
     }
+
+
 
     private void signIn(){
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -167,4 +231,7 @@ public class MainActivity extends AppCompatActivity {
                     // ...
                 });
     }
+
+
+
 }
