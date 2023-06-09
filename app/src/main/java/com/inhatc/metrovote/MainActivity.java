@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private String imagePath;
     private Bitmap bitmap;
 
+    private Button button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
                         FirebaseUser user = mAuth.getCurrentUser();
                         UserDataSingleton.getInstance().setUser(user);
-                        Intent intent = new Intent(MainActivity.this, MyPageActivity.class);
+                        Intent intent = new Intent(MainActivity.this, MainpageActivity.class);
                         startActivity(intent);
 //                            updateUI(user);
                     } else {

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +16,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MetroVote"
         tools:targetApi="31">
+        <activity
+            android:name=".MainpageActivity"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAB5JljCZJgmaomCGEC5guEDOPTGIF_taU" />
+
+        <activity
+            android:name=".StationInfoActivity"
+            android:exported="false" />
         <activity
             android:name=".MyPageActivity"
             android:exported="false" />

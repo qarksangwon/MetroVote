@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".MainActivity">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtStation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="497dp"
+        android:text="역 이름 :"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txtLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="470dp"
+        android:text="호선 :"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/txtStation"
+        app:layout_constraintTop_toBottomOf="@+id/map" />
+
+    <TextView
+        android:id="@+id/txtIsToilet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:text="개찰구 내부에 화장실 존재 여부"
+        app:layout_constraintStart_toStartOf="@+id/txtLine"
+        app:layout_constraintTop_toBottomOf="@+id/txtLine" />
+
+    <TextView
+        android:id="@+id/txtRealTimeArrive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="47dp"
+        android:text="실시간 도착 정보"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtIsToilet" />
+
+    <TextView
+        android:id="@+id/txtStationInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="7dp"
+        android:text="역 정보"
+        app:layout_constraintBottom_toTopOf="@+id/txtLineInfo"
+        app:layout_constraintStart_toEndOf="@+id/txtStation" />
+
+    <TextView
+        android:id="@+id/txtLineInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="호선 정보"
+        app:layout_constraintBottom_toTopOf="@+id/txtIsToilet"
+        app:layout_constraintStart_toStartOf="@+id/txtStationInfo" />
+
+    <TextView
+        android:id="@+id/txtIsToiletInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="화장실 정보"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtIsToilet"
+        app:layout_constraintStart_toEndOf="@+id/txtIsToilet" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
