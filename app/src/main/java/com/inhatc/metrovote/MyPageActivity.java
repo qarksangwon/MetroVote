@@ -1,6 +1,9 @@
 package com.inhatc.metrovote;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +22,8 @@ public class MyPageActivity extends AppCompatActivity {
     private TextView txtEmail;
     private ImageView profileImageView;
 
+    private Button btnQR;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,8 +32,10 @@ public class MyPageActivity extends AppCompatActivity {
         txtName = findViewById(R.id.txtName);
         txtEmail     = findViewById(R.id.txtEmail);
         profileImageView = findViewById(R.id.profileImgView);
+        btnQR = findViewById(R.id.btnQR);
 
         FirebaseUser user = UserDataSingleton.getInstance().getUser();
+
 
         txtName.setText(user.getDisplayName());
         txtEmail.setText(user.getEmail());
@@ -45,6 +52,14 @@ public class MyPageActivity extends AppCompatActivity {
                     .into(profileImageView);
         }
 
+        btnQR.setOnClickListener(new View.OnClickListener(){
+                @Override
+            public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), QrActivity.class);
+                    startActivity(intent);
+            }
+        });
     }
+
 
 }
