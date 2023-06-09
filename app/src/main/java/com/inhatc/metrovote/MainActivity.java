@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +28,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.inhatc.metrovote.singletone.UserDataSingleton;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -54,26 +54,28 @@ public class MainActivity extends AppCompatActivity {
     private Button btnInsCaptcha;
     private String captchaText;
     private ImageView captchaImage;
-    String imagePath;
+    private String imagePath;
     private Bitmap bitmap;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        captchaText = CAPTCHA.createCaptchaValue();
-        captchaImage = findViewById(R.id.captchaImage);
-        btnResCaptcha = (Button) findViewById(R.id.btnResCaptcha);
-        btnInsCaptcha = (Button) findViewById(R.id.btnInsertCaptcha);
+        captchaText = CAPTCHA.createCaptchaValue();     //초기 캡챠값 설정
+        captchaImage = findViewById(R.id.captchaImage); //캡챠 이미지 출력 뷰 설정
+        
+        btnResCaptcha = (Button) findViewById(R.id.btnResCaptcha);    //리셋 버튼
+        btnInsCaptcha = (Button) findViewById(R.id.btnInsertCaptcha); //입력 버튼
 
-        Drawable drawable = TextToImg.generateImage(captchaText, MainActivity.this,300,150);
+        Drawable drawable = TextToImg.generateImage(captchaText, MainActivity.this,300,150);  //초기 캡챠 이미지 불러오기
         if (drawable != null) {
-            captchaImage.setImageDrawable(drawable);
+            captchaImage.setImageDrawable(drawable);  //초기 캡챠 이미지 설정
         }
         
-        btnResCaptcha.setOnClickListener(new View.OnClickListener(){
+
+        /* 캡챠 리셋 버튼 리스너*/
+        btnResCaptcha.setOnClickListener(new View.OnClickListener(){ 
             @Override
             public void onClick(View v) {
                 captchaText = CAPTCHA.createCaptchaValue();
@@ -84,25 +86,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnInsCaptcha.setOnClickListener(new View.OnClickListener(){
+        /* 캡챠 입력 버튼 리스너 */
+        btnInsCaptcha.setOnClickListener(new View.OnClickListener(){  
             @Override
             public void onClick(View v) {
                 String insertCaptcha = ((EditText)findViewById(R.id.edtTextCaptcha)).getText().toString();
 
-                if(captchaText.equals(insertCaptcha)) {
+                if(captchaText.equals(insertCaptcha)) { // 캡챠 일치시
                     Toast.makeText(MainActivity.this, "캡차가 일치합니다!", Toast.LENGTH_SHORT).show();
                     btnGoogleLogin.setEnabled(true);
                     btnInsCaptcha.setEnabled(false);
                     btnResCaptcha.setEnabled(false);
-                } else {
+                } else { //캡챠 불일치시
                     Toast.makeText(MainActivity.this, "캡차가 일치하지 않습니다.!", Toast.LENGTH_SHORT).show();
-                    captchaText = CAPTCHA.createCaptchaValue();
+                    
+                    captchaText = CAPTCHA.createCaptchaValue(); //캡챠 재 생성
                     Drawable drawable = TextToImg.generateImage(captchaText, MainActivity.this,300,150);
                     if (drawable != null) {
                         captchaImage.setImageDrawable(drawable);
                     }
                 }
-
+                ((EditText)findViewById(R.id.edtTextCaptcha)).setText("");
             }
         });
 
@@ -132,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
         btnLogoutGoogle = findViewById(R.id.btn_logout_google);
         btnLogoutGoogle.setOnClickListener(view -> {
             signOut(); //로그아웃
@@ -199,6 +202,9 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "signInWithCredential:success");
                         Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
                         FirebaseUser user = mAuth.getCurrentUser();
+                        UserDataSingleton.getInstance().setUser(user);
+                        Intent intent = new Intent(MainActivity.this, MyPageActivity.class);
+                        startActivity(intent);
 //                            updateUI(user);
                     } else {
                         // If sign in fails, display a message to the user.
