@@ -168,10 +168,19 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
                 try {
                     currentTime = sdf.parse(currentTimeString);
                     for (int i = sortedList.size() - 1; i >= 0; i--) {
-                        if (currentTime.getTime() - sortedList.get(i).getLeftTime().getTime() >= 0) {
-                            sortedList.remove(i);
+                        long leftTime = sortedList.get(i).getLeftTime().getTime();
+                        if (leftTime == -32400000) {
+                            long arriveTime = sortedList.get(i).getArriveTime().getTime();
+                            if (currentTime.getTime() - arriveTime >= 0) {
+                                sortedList.remove(i);
+                            }
+                        } else {
+                            if (currentTime.getTime() - leftTime >= 0) {
+                                sortedList.remove(i);
+                            }
                         }
                     }
+
 
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
