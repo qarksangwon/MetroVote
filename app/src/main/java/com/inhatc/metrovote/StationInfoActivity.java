@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -34,6 +35,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.CancellationToken;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,10 +45,16 @@ import com.google.firebase.database.ValueEventListener;
 import com.inhatc.metrovote.api.SubwayArriveAPI;
 import com.inhatc.metrovote.api.SubwayArriveDTO;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class StationInfoActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -60,10 +68,10 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
     private String lineName;
 
     private String statn_num;
-    private float nowLongitude;
-    private float nowLatitude;
+    private double nowLongitude;
+    private double nowLatitude;
 
-    private float minDifValue = Float.MAX_VALUE;
+    private double minDifValue = Float.MAX_VALUE;
 
     private double latitude = 37.361773, longitude = 126.738437;
 
@@ -109,44 +117,65 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
                 subwayArriveDTOList = subwayArriveList;
 
                 // 정렬 작업
-                ArrayList<SubwayArriveDTO> sortedList = new ArrayList<>(subwayArriveDTOList);
+                ArrayList<SubwayArriveDTO> sortedList = new ArrayList<SubwayArriveDTO>(subwayArriveDTOList);
 
                 Comparator<SubwayArriveDTO> comparator = (dto1, dto2) -> {
-                    Date currentTime = new Date();
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                    String currentTimeString = sdf.format(new Date());
+                    Date currentTime = null;
+                    try {
+                        currentTime = sdf.parse(currentTimeString);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+
 
                     // dto1과 dto2의 ArriveTime과 LeftTime 가져오기
                     Date arriveTime1 = dto1.getArriveTime();
                     Date leftTime1 = dto1.getLeftTime();
+
                     Date arriveTime2 = dto2.getArriveTime();
                     Date leftTime2 = dto2.getLeftTime();
 
                     // dto1과 dto2의 ArriveTime과 현재 시간과의 차이 계산
-                    long difference1 = arriveTime1.getTime() - currentTime.getTime();
-                    long difference2 = arriveTime2.getTime() - currentTime.getTime();
+                    long difference1 = Math.abs(arriveTime1.getTime() - currentTime.getTime());
+                    long difference2 = Math.abs(arriveTime2.getTime() - currentTime.getTime());
 
                     // dto1과 dto2의 LeftTime과 현재 시간과의 차이 계산
-                    long leftDifference1 = leftTime1.getTime() - currentTime.getTime();
-                    long leftDifference2 = leftTime2.getTime() - currentTime.getTime();
+                    long leftDifference1 = Math.abs(leftTime1.getTime() - currentTime.getTime());
+                    long leftDifference2 = Math.abs(leftTime2.getTime() - currentTime.getTime());
 
                     // ArriveTime이 0인 경우 해당 LeftTime으로 정렬
                     if (arriveTime1.getTime() == 0) {
                         return Long.compare(leftDifference1, leftDifference2);
-                    } else if (arriveTime2.getTime() == 0) {
-                        return Long.compare(leftDifference2, leftDifference1);
                     }
 
                     // LeftTime이 0인 경우 해당 ArriveTime으로 정렬
                     if (leftTime1.getTime() == 0) {
                         return Long.compare(difference1, difference2);
-                    } else if (leftTime2.getTime() == 0) {
-                        return Long.compare(difference2, difference1);
                     }
 
                     // 둘 다 0인 경우 다른 시간으로 정렬 (예: ArriveTime 기준)
                     return Long.compare(difference1, difference2);
-                    };
+                };
 
                 Collections.sort(sortedList, comparator);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                String currentTimeString = sdf.format(new Date());
+                Date currentTime = null;
+                try {
+                    currentTime = sdf.parse(currentTimeString);
+                    for (int i = sortedList.size() - 1; i >= 0; i--) {
+                        if (currentTime.getTime() - sortedList.get(i).getLeftTime().getTime() >= 0) {
+                            sortedList.remove(i);
+                        }
+                    }
+
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
 
                 // 최대 리스트 크기 조정
                 while (sortedList.size() > MAX_PRINT_LIST_SIZE) {
@@ -174,19 +203,17 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
         });
 
 
-
         txtStationInfo = findViewById(R.id.txtStationInfo);
         txtLineInfo = findViewById(R.id.txtLineInfo);
         txtToiletInfo = findViewById(R.id.txtIsToiletInfo);
         txtDistanceInfo = findViewById(R.id.txtDistanceInfo);
         chkIsUp = findViewById(R.id.chkIsUp);
-        chkIsUp.setSelected(true);
-        
+        chkIsUp.setChecked(true);
+        isUP = true;
         chkIsUp.setOnCheckedChangeListener((buttonView, isChecked) -> { //상행하행 변경 이벤트
             isUP = isChecked;
-                subwayArriveAPI.fetchDataFromAPI(getApplicationContext(), statn_num, isUP);
+            subwayArriveAPI.fetchDataFromAPI(getApplicationContext(), statn_num, isUP);
         });
-
 
         // 원하는 크기로 이미지 조정
         int width = 200; // 변경할 너비
@@ -211,6 +238,51 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
 
         // 위치 관리자 객체 생성
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+
+        CancellationSignal cancellationSignal = new CancellationSignal();
+
+        // Executor 생성
+        Executor executor = Executors.newSingleThreadExecutor();
+
+        Consumer<Location> locationConsumer = new Consumer<Location>() {
+            @Override
+            public void accept(Location location) {
+                // 위치 정보 사용
+                if (location != null) {
+                    nowLatitude = location.getLatitude();
+                    nowLongitude = location.getLongitude();
+
+                    // 위치 정보가 정확한 범위 내에 있는지 확인
+                    if (isValidLocation(nowLatitude, nowLongitude)) {
+                        // 정확한 위치 정보를 얻었으므로 작업 수행
+                        // ...
+
+                        mapFragment.getMapAsync(StationInfoActivity.this);
+                        subwayArriveAPI.fetchDataFromAPI(getApplicationContext(), statn_num, isUP);
+                        Log.d("Current Location", "Latitude: " + latitude + ", Longitude: " + longitude);
+                    } else {
+                        // 정확한 위치 정보가 아닌 경우, 다시 요청
+                        if (ActivityCompat.checkSelfPermission(StationInfoActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(StationInfoActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+                            return;
+                        }
+                        locationManager.getCurrentLocation(LocationManager.GPS_PROVIDER, cancellationSignal, executor, this);
+                    }
+
+                    Log.d("Current Location", "Latitude: " + latitude + ", Longitude: " + longitude);
+                } else {
+                    // 위치 정보를 가져오지 못한 경우 처리
+                    Log.d("Current Location", "Failed to retrieve location");
+                }
+            }
+        };
 
         // 위치 정보 수신을 위한 리스너 정의
         LocationListener locationListener = new LocationListener() {
@@ -251,17 +323,18 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
 
         // 위치 권한 확인
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-            if (lastKnownLocation != null) {
-                nowLatitude = (float) lastKnownLocation.getLatitude(); // 현재 위도
-                nowLongitude = (float) lastKnownLocation.getLongitude(); // 현재 경도
+            if (currentLocation != null) {
+                nowLatitude = (float) currentLocation.getLatitude(); // 현재 위도
+                nowLongitude = (float) currentLocation.getLongitude(); // 현재 경도
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, locationListener);
 
                 // 위치 정보를 활용한 작업 수행
                 Log.d("Location", "Latitude: " + nowLatitude + ", Longitude: " + nowLongitude);
             } else {
-                // 위치 권한이 허용된 경우 위치 업데이트 요청
+                String provider = LocationManager.GPS_PROVIDER;
+                locationManager.getCurrentLocation(provider, cancellationSignal, executor, locationConsumer);
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, locationListener);
             }
         } else {
@@ -347,7 +420,7 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
                     Float stationLong = snapshot.child("STATN_LONG").getValue(Float.class);
                     Float stationLat = snapshot.child("STATN_LAT").getValue(Float.class);
 
-                    float difValue = Math.abs(nowLongitude - stationLong) + Math.abs(nowLatitude - stationLat);
+                    double difValue = Math.abs(nowLongitude - stationLong) + Math.abs(nowLatitude - stationLat);
 
                     if (difValue < minDifValue) {
                         stationName = snapshot.child("STATN_NM").getValue(String.class);
@@ -374,8 +447,11 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
 
                     txtStationInfo.setText(stationName);
                     txtLineInfo.setText(lineName);
-                    mapFragment.getMapAsync(StationInfoActivity.this);
-                    subwayArriveAPI.fetchDataFromAPI(getApplicationContext(), statn_num, isUP);
+                    if(isValidLocation(nowLatitude, nowLongitude)) {
+                        mapFragment.getMapAsync(StationInfoActivity.this);
+                        subwayArriveAPI.fetchDataFromAPI(getApplicationContext(), statn_num, isUP);
+                    }
+
                 }
             }
 
@@ -395,7 +471,7 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
                     Float stationLong = snapshot.child("STATN_LONG").getValue(Float.class);
                     Float stationLat = snapshot.child("STATN_LAT").getValue(Float.class);
 
-                    float difValue = Math.abs(nowLongitude - stationLong) + Math.abs(nowLatitude - stationLat);
+                    double difValue = Math.abs(nowLongitude - stationLong) + Math.abs(nowLatitude - stationLat);
 
                     if (difValue < minDifValue) {
                         stationName = snapshot.child("STATN_NM").getValue(String.class);
@@ -419,10 +495,14 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
                         txtToiletInfo.setText("없음");
                         txtToiletInfo.setTextColor(Color.GRAY);
                     }
-                        txtStationInfo.setText(stationName);
-                        txtLineInfo.setText(lineName);
-                    mapFragment.getMapAsync(StationInfoActivity.this);
-                    subwayArriveAPI.fetchDataFromAPI(getApplicationContext(), statn_num, isUP);
+                    txtStationInfo.setText(stationName);
+                    txtLineInfo.setText(lineName);
+
+                    if(isValidLocation(nowLatitude, nowLongitude)) {
+                        mapFragment.getMapAsync(StationInfoActivity.this);
+                        subwayArriveAPI.fetchDataFromAPI(getApplicationContext(), statn_num, isUP);
+                    }
+
                 }
             }
 
@@ -433,7 +513,11 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
         });
     }
 
-
+    // 위치 정보가 정확한 범위 내에 있는지 확인하는 메서드
+    private boolean isValidLocation(double latitude, double longitude) {
+        // 예시: 위치 정보가 0인 경우는 유효하지 않다고 가정
+        return latitude != 0 && longitude != 0;
+    }
 
 
 }

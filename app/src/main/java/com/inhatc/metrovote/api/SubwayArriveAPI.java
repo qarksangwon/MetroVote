@@ -50,7 +50,7 @@ public class SubwayArriveAPI {
     }
 
     // 비동기로 데이터를 가져오는 함수
-    public void fetchDataFromAPI(Context context, String stationNum, boolean isUP) {
+    public void fetchDataFromAPI(Context context, String stationNum, boolean isUP ) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("http://openAPI.seoul.go.kr:8088/");
         stringBuilder.append(context.getString(R.string.subway_key));
@@ -59,13 +59,13 @@ public class SubwayArriveAPI {
         stringBuilder.append("/");
         stringBuilder.append(stationNum);
         stringBuilder.append("/");
+        stringBuilder.append(isWeekDAy());
+        stringBuilder.append("/");
         if(isUP) {
             stringBuilder.append(DIR_UP);
         } else {
             stringBuilder.append(DIR_DOWN);
         }
-        stringBuilder.append("/");
-        stringBuilder.append(isWeekDAy());
         stringBuilder.append("/");
         String url = stringBuilder.toString();
 
@@ -168,7 +168,7 @@ public class SubwayArriveAPI {
         if (dayOfWeek == Calendar.SATURDAY) {
             return SAT_DAY;
         } else if (dayOfWeek == Calendar.SUNDAY) {
-            return SAT_DAY; //왠지 모르겠지만 오류 발생해서 일요일도 토요일로 수정
+            return SUN_DAY; //왠지 모르겠지만 오류 발생해서 일요일도 토요일로 수정
         } else {
             return WEEK_DAY;
         }

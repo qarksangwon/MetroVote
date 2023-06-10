@@ -42,10 +42,21 @@ public class SubwayArriveAdapter extends RecyclerView.Adapter<SubwayArriveAdapte
         } else {
             holder.txtArriveTime.setText(arriveTime);
         }
-        holder.txtLeftTime.setText(format.format(subwayArriveDTO.getLeftTime()));
+
+        String leftTime = format.format(subwayArriveDTO.getLeftTime());
+        if(leftTime.equals("00:00:00")) {
+            holder.txtLeftTime.setText("종점 출발");
+        } else {
+            holder.txtLeftTime.setText(leftTime);
+        }
         holder.txtSubwaySName.setText(subwayArriveDTO.getSubwaysName());
         holder.txtSubwayEName.setText(subwayArriveDTO.getSubwayEName());
-        holder.txtInoutTag.setText(subwayArriveDTO.getInoutTag());
+        String inoutTag = subwayArriveDTO.getInoutTag();
+        if(inoutTag.equals("1")) {
+            holder.txtInoutTag.setText("상행");
+        } else{
+            holder.txtInoutTag.setText("하행");
+        }
         holder.txtFLFlag.setText(subwayArriveDTO.getFlFlag());
 
     }
