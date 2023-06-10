@@ -460,6 +460,8 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
                         mapFragment.getMapAsync(StationInfoActivity.this);
                         subwayArriveAPI.fetchDataFromAPI(getApplicationContext(), statn_num, isUP);
                     }
+                    isFirstDataRetrieved = false;
+                    isSecondDataRetrieved = false;
 
                 }
             }
@@ -511,7 +513,8 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
                         mapFragment.getMapAsync(StationInfoActivity.this);
                         subwayArriveAPI.fetchDataFromAPI(getApplicationContext(), statn_num, isUP);
                     }
-
+                    isFirstDataRetrieved = false;
+                    isSecondDataRetrieved = false;
                 }
             }
 
