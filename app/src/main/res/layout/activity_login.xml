@@ -86,6 +86,7 @@
         android:ems="10"
         android:hint="캡차를 입력해주세요"
         android:inputType="text"
+        android:textColor="@color/black"
         app:layout_constraintBaseline_toBaselineOf="@+id/btnInsertCaptcha"
         app:layout_constraintEnd_toStartOf="@+id/btnInsertCaptcha"
         app:layout_constraintHorizontal_chainStyle="packed"

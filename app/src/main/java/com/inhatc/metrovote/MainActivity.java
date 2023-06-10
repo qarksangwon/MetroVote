@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         captchaText = CAPTCHA.createCaptchaValue();     //초기 캡챠값 설정
         captchaImage = findViewById(R.id.captchaImage); //캡챠 이미지 출력 뷰 설정
+
+        ((EditText)findViewById(R.id.edtTextCaptcha)).setText(captchaText); //개발과정에서 편한 캡챠 입력을 위한 부분 나중에 지우기
         
         btnResCaptcha = (Button) findViewById(R.id.btnResCaptcha);    //리셋 버튼
         btnInsCaptcha = (Button) findViewById(R.id.btnInsertCaptcha); //입력 버튼
@@ -99,6 +101,14 @@ public class MainActivity extends AppCompatActivity {
                     btnGoogleLogin.setEnabled(true);
                     btnInsCaptcha.setEnabled(false);
                     btnResCaptcha.setEnabled(false);
+
+                    gsa = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+
+                    if (gsa != null) { // 로그인 되있는 경우
+                        signOut();
+                    } else {
+                    }
+
                 } else { //캡챠 불일치시
                     Toast.makeText(MainActivity.this, "캡차가 일치하지 않습니다.!", Toast.LENGTH_SHORT).show();
                     

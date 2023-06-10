@@ -25,6 +25,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="497dp"
         android:text="역 이름 :"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -34,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="470dp"
         android:text="호선 :"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/txtStation"
         app:layout_constraintTop_toBottomOf="@+id/map" />
@@ -44,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:text="개찰구 내부에 화장실 존재 여부"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/txtLine"
         app:layout_constraintTop_toBottomOf="@+id/txtLine" />
 
@@ -54,6 +57,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="47dp"
         android:text="실시간 도착 정보"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtIsToilet" />
 
@@ -62,8 +66,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="7dp"
+        android:layout_marginBottom="8dp"
         android:text="역 정보"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/txtLineInfo"
         app:layout_constraintStart_toEndOf="@+id/txtStation" />
 
@@ -71,8 +76,9 @@
         android:id="@+id/txtLineInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="4dp"
         android:text="호선 정보"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/txtIsToilet"
         app:layout_constraintStart_toStartOf="@+id/txtStationInfo" />
 
@@ -84,5 +90,50 @@
         android:text="화장실 정보"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtIsToilet"
         app:layout_constraintStart_toEndOf="@+id/txtIsToilet" />
+
+    <TextView
+        android:id="@+id/txtDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="124dp"
+        android:text="역과의 거리 :"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/map"
+        app:layout_constraintTop_toBottomOf="@+id/map" />
+
+    <TextView
+        android:id="@+id/txtDistanceInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:text="거리"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@+id/txtDistance"
+        app:layout_constraintTop_toBottomOf="@+id/map" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="371dp"
+        android:layout_height="350dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtRealTimeArrive" />
+
+    <CheckBox
+        android:id="@+id/chkIsUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="상행"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.902"
+        app:layout_constraintStart_toEndOf="@+id/txtRealTimeArrive" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
