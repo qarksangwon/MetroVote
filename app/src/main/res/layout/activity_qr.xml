@@ -9,77 +9,78 @@
 
 
     <TextView
+        android:id="@+id/txtQrResult"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="91dp"
+        android:gravity="center"
+        android:hint="이곳에 타고계신 열차의 정보가 나타납니다."
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btnReport"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnGps" />
+
+    <TextView
         android:id="@+id/textMetroVote"
         android:layout_width="160dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="136dp"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="139dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="37dp"
         android:gravity="center|center_vertical"
         android:text="METROVOTE"
         android:textColor="#2196F3"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/txtQrResult"
-        app:layout_constraintEnd_toEndOf="@+id/txtQrResult"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="88dp"
-        android:text="찾기"
-        app:layout_constraintEnd_toEndOf="@+id/txtQrResult"
-        app:layout_constraintTop_toBottomOf="@+id/txtQrResult" />
-
-    <ScrollView
-        android:id="@+id/scrollView7"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="22dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/txtManual"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnTest">
-
-        <TextView
-            android:id="@+id/txtTest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="#000000" />
-    </ScrollView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnScan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="97dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="59dp"
         android:text="스캔"
-        app:layout_constraintStart_toStartOf="@+id/txtQrResult"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/btnGps"
+        app:layout_constraintEnd_toEndOf="@+id/btnGps"
+        app:layout_constraintTop_toBottomOf="@+id/txtManual" />
 
     <TextView
-        android:id="@+id/txtQrResult"
+        android:id="@+id/txtManual"
         android:layout_width="0dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="64dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="46dp"
         android:gravity="center"
-        android:text="결과 "
-        app:layout_constraintBottom_toBottomOf="@+id/btnScan"
+        android:text="아래의 버튼을 눌러 QR코드를 찍어주세요"
+        app:layout_constraintBottom_toTopOf="@+id/btnScan"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textMetroVote" />
+
+    <Button
+        android:id="@+id/btnReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="188dp"
+        android:text="불편사항 신고"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtQrResult" />
+
+    <Button
+        android:id="@+id/btnGps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="59dp"
+        android:text="현 위치 정보"
+        app:layout_constraintBottom_toTopOf="@+id/txtQrResult"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnScan" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

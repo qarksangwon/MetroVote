@@ -62,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //잠시 실행용
+    Intent intent = new Intent(getApplicationContext(), Report.class);
+    startActivity(intent);
+
+
         captchaText = CAPTCHA.createCaptchaValue();     //초기 캡챠값 설정
         captchaImage = findViewById(R.id.captchaImage); //캡챠 이미지 출력 뷰 설정
         
