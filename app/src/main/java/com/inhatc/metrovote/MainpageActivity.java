@@ -15,7 +15,7 @@ public class MainpageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_page);
 
         inToStationInfoBtn = (Button) findViewById(R.id.inToStationInfoBtn);
         inToStationInfoBtn.setOnClickListener(new View.OnClickListener(){
