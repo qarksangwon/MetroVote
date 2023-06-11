@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".Report">
+
+  <TextView
+      android:id="@+id/tabReportTrainID"
+      android:layout_width="0dp"
+      android:layout_height="25dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginTop="28dp"
+      android:layout_marginEnd="20dp"
+      android:text="TextView"
+      android:textColor="#000000"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <RadioGroup
+      android:id="@+id/radioGroup"
+      android:layout_width="383dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="14dp"
+      android:layout_marginTop="58dp"
+      android:layout_marginEnd="14dp"
+      android:layout_marginBottom="1dp"
+      android:orientation="horizontal"
+      app:layout_constraintBottom_toTopOf="@+id/layoutReport"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+    <RadioButton
+        android:id="@+id/rbtnReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="불편사항 신고"
+        android:textColor="#000000" />
+
+    <RadioButton
+        android:id="@+id/rbtnTempDown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="더우신가요?"
+        android:textColor="#000000" />
+
+    <RadioButton
+        android:id="@+id/rbtnTempUP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="추우신가요?"
+        android:textColor="#000000" />
+  </RadioGroup>
+
+  <LinearLayout
+      android:id="@+id/layoutReport"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_marginStart="1dp"
+      android:layout_marginEnd="1dp"
+      android:layout_marginBottom="1dp"
+      android:orientation="horizontal"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+    <include
+        layout="@layout/activity_tab_report" />
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/layoutTempDown"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_marginStart="1dp"
+      android:layout_marginEnd="1dp"
+      android:layout_marginBottom="1dp"
+      android:orientation="horizontal"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+    <include
+        layout="@layout/activity_tab_temp_down" />
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/layoutTempUp"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_marginStart="1dp"
+      android:layout_marginEnd="1dp"
+      android:layout_marginBottom="1dp"
+      android:orientation="horizontal"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+    <include
+        layout="@layout/activity_tab_temp_up" />
+
+  </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

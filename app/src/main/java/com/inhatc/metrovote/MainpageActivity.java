@@ -9,16 +9,28 @@ import android.widget.Button;
 
 public class MainpageActivity extends AppCompatActivity {
 
-    private Button inToStationInfoBtn;
+    private Button intoQrInfoBtn;
+
+    private Button intoStaionInfoBtn;
     private Button inToMyPageBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+        intoQrInfoBtn = (Button) findViewById(R.id.inToSubwaySelectPageBtn);
+        intoStaionInfoBtn = (Button) findViewById(R.id.inToStationInfoBtn);
+        inToMyPageBtn = (Button) findViewById(R.id.inToMyPageBtn);
 
-        inToStationInfoBtn = (Button) findViewById(R.id.inToStationInfoBtn);
-        inToStationInfoBtn.setOnClickListener(new View.OnClickListener(){
+        intoQrInfoBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainpageActivity.this, SelectSubwayActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        intoStaionInfoBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainpageActivity.this, StationInfoActivity.class);
@@ -26,7 +38,7 @@ public class MainpageActivity extends AppCompatActivity {
             }
         });
 
-        inToMyPageBtn = (Button) findViewById(R.id.inToMyPageBtn);
+
         inToMyPageBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {

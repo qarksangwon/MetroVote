@@ -18,7 +18,28 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".SelectSubwayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubwayFindByGpsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainpageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubwayFindByQrActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Report"
+            android:exported="false" />
+        <activity
+            android:name=".TabReport"
+            android:exported="false" />
+        <activity
+            android:name=".TabTempUp"
+            android:exported="false" />
+        <activity
+            android:name=".TabTempDown"
             android:exported="false" />
 
         <meta-data

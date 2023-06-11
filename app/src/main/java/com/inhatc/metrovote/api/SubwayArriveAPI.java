@@ -1,7 +1,6 @@
 package com.inhatc.metrovote.api;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.inhatc.metrovote.R;
 
@@ -19,8 +18,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 public class SubwayArriveAPI {
@@ -168,7 +165,7 @@ public class SubwayArriveAPI {
         if (dayOfWeek == Calendar.SATURDAY) {
             return SAT_DAY;
         } else if (dayOfWeek == Calendar.SUNDAY) {
-            return SUN_DAY; //왠지 모르겠지만 오류 발생해서 일요일도 토요일로 수정
+            return SUN_DAY;
         } else {
             return WEEK_DAY;
         }

@@ -18,8 +18,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.util.Log;
+import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +36,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.CancellationToken;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -64,6 +64,8 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
 
     private TextView txtDistanceInfo;
 
+    private ProgressBar progressBar;
+
     private String stationName;
     private String lineName;
 
@@ -73,12 +75,14 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
 
     private double minDifValue = Float.MAX_VALUE;
 
-    private double latitude = 37.361773, longitude = 126.738437;
+    private double latitude, longitude;
 
     private Boolean isToiletAvailable;
 
     private boolean isFirstDataRetrieved = false;
     private boolean isSecondDataRetrieved = false;
+
+    private boolean isProgressBarLoading = true;
 
     private SupportMapFragment mapFragment; //맵 정보
 
@@ -106,6 +110,9 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_info);
+        progressBar = findViewById(R.id.firstDataProgressBar);
+        startProgressBar(progressBar);
+
         FirebaseApp.initializeApp(this);
 
 
@@ -115,7 +122,6 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
             public void onFetchDataSuccess(ArrayList<SubwayArriveDTO> subwayArriveList) {
 
                 subwayArriveDTOList = subwayArriveList;
-
                 // 정렬 작업
                 ArrayList<SubwayArriveDTO> sortedList = new ArrayList<SubwayArriveDTO>(subwayArriveDTOList);
 
@@ -199,6 +205,7 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
                         recyclerView.setLayoutManager(new LinearLayoutManager(StationInfoActivity.this));
                         adapter = new SubwayArriveAdapter(sortedList);
                         recyclerView.setAdapter(adapter);
+                        stopProgressBar(progressBar);
                     }
                 });
             }
@@ -217,11 +224,18 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
         txtToiletInfo = findViewById(R.id.txtIsToiletInfo);
         txtDistanceInfo = findViewById(R.id.txtDistanceInfo);
         chkIsUp = findViewById(R.id.chkIsUp);
+
         chkIsUp.setChecked(true);
         isUP = true;
         chkIsUp.setOnCheckedChangeListener((buttonView, isChecked) -> { //상행하행 변경 이벤트
+
             isUP = isChecked;
-            subwayArriveAPI.fetchDataFromAPI(getApplicationContext(), statn_num, isUP);
+            if(!isProgressBarLoading) {
+                startProgressBar(progressBar);
+                subwayArriveAPI.fetchDataFromAPI(getApplicationContext(), statn_num, isUP);
+            } else {
+                chkIsUp.setChecked(!isChecked);
+            }
         });
 
         // 원하는 크기로 이미지 조정
@@ -293,6 +307,8 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
             }
         };
 
+
+
         // 위치 정보 수신을 위한 리스너 정의
         LocationListener locationListener = new LocationListener() {
             @Override
@@ -337,7 +353,8 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
             if (currentLocation != null) {
                 nowLatitude = (float) currentLocation.getLatitude(); // 현재 위도
                 nowLongitude = (float) currentLocation.getLongitude(); // 현재 경도
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 100, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 10, locationListener);
 
                 // 위치 정보를 활용한 작업 수행
                 Log.d("Location", "Latitude: " + nowLatitude + ", Longitude: " + nowLongitude);
@@ -345,6 +362,7 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
                 String provider = LocationManager.GPS_PROVIDER;
                 locationManager.getCurrentLocation(provider, cancellationSignal, executor, locationConsumer);
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 10, locationListener);
             }
         } else {
             // 위치 권한이 거부된 경우 권한 요청 필요
@@ -352,6 +370,7 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
         }
 
     }
+
     private void updateMarker() {
         mapFragment.getMapAsync(this);
     }
@@ -530,6 +549,17 @@ public class StationInfoActivity extends AppCompatActivity implements OnMapReady
         // 예시: 위치 정보가 0인 경우는 유효하지 않다고 가정
         return latitude != 0 && longitude != 0;
     }
+
+    public void startProgressBar(ProgressBar progressBar) {
+        progressBar.setVisibility(View.VISIBLE);
+        isProgressBarLoading = true;
+        Toast.makeText(this, "위치 정보를 가져오는 중입니다.", Toast.LENGTH_SHORT).show();
+    }
+    public void stopProgressBar(ProgressBar progressBar) {
+        progressBar.setVisibility(View.INVISIBLE);
+        isProgressBarLoading = false;
+    }
+
 
 
 }
